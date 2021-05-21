@@ -1,0 +1,387 @@
+body {
+    font-family: verdana,arial,sans-serif;
+}
+
+.circle {
+    border: 1px solid black;
+    border-radius: 50%;
+    display: inline-block;
+    height: 14px;
+    width: 14px;
+}
+
+.tab-content {
+    margin-top: 10px;
+}
+
+.align-left {
+    text-align: left !important;
+}
+
+.align-right {
+    text-align: right !important;
+}
+
+.label-success {
+    background-color: #2ECC71;
+}
+
+/*
+    Original version: http://www.bootply.com/128062
+    This version adds support for IE 10+ and Firefox.
+*/
+
+.glyphicon-refresh-animate {
+    -animation: spin .7s infinite linear;
+    -ms-animation: spin .7s infinite linear;
+    -webkit-animation: spinw .7s infinite linear;
+    -moz-animation: spinm .7s infinite linear;
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg);}
+    to { transform: scale(1) rotate(360deg);}
+}
+
+@-webkit-keyframes spinw {
+    from { -webkit-transform: rotate(0deg);}
+    to { -webkit-transform: rotate(360deg);}
+}
+
+@-moz-keyframes spinm {
+    from { -moz-transform: rotate(0deg);}
+    to { -moz-transform: rotate(360deg);}
+}
+
+.team-score-cell {
+    width: 6em;
+}
+.score-cell {
+    width: 4em;
+    font-family: verdana,arial,sans-serif;
+}
+.score-rank {
+    width: 2em;
+}
+
+.score-point {
+    font-weight: bold;
+    display: block;
+}
+
+.score-time {
+    color: gray;
+    display: block;
+    font-size: 9px;
+}
+
+.font-bold {
+    font-weight: bold;
+}
+
+.score-correct .score-point, .score-correct-summary{
+    color: #0a0;
+}
+
+.score-correct {
+    background-color: #dff0d8;
+}
+
+.score-first .score-point{
+    color: #0a0;
+}
+
+.score-first {
+    /*border: solid 1px #0a0;*/
+    /*background-color: #4bec13;*/
+    outline: #0a0 solid 2px;
+}
+
+.score-incorrect {
+    color: red;
+    background-color: #ff767555;
+}
+
+.table > tbody > tr > td {
+    vertical-align: middle;
+}
+
+.table-scoreboard > tbody > tr > td.score-cell {
+    padding: 0px;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+.display-block {
+    display: block;
+}
+.active-row {
+    border-top: solid #00aa00 2px;
+    border-bottom: solid #00aa00 2px;
+}
+
+.no-margin {
+    margin: 0;
+}
+
+#holder {
+    width: 100%;
+}
+
+#holder>div {
+    border-top: solid #ccc 1px;
+    border-bottom: solid #ccc 1px;
+}
+
+.subnav {
+    margin:0;
+    top: 0px;
+    z-index: 1020;
+    background-color: rgb(247,247,247);
+   /* border-bottom: 1px solid #E1E1E1;*/
+    padding: 8px 0px 0px 0px;
+    text-align: right;
+}
+
+.tag {
+    font-size: 1.1rem;
+}
+
+.wrap {
+    min-height: 100%;
+    height: auto;
+    /* Negative indent footer by its height */
+    margin: 0 auto -50px;
+    /* Pad bottom by footer height */
+    padding: 0 0 60px;
+}
+
+.navbar-static-top {
+    border-top: 5px solid #2a88bd;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+}
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 52px;
+    /*background-color: #f5f5f5;*/
+
+}
+
+.footer-inner {
+    margin-bottom: 0;
+    border-radius: 6px 6px 0 0;
+}
+
+.footer .btn {
+    margin-top: 9px;
+}
+
+
+/*.connection-online {
+    color: #2ecc71;
+}*/
+
+.connection-online::before {
+    color: #4bec13;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: #006600;
+}
+
+.connection-offline::before {
+    color: #b5192c;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: #62060f;
+}
+
+.banner {
+    margin: 5px 0 5px 12px;
+}
+
+.ads-full-width {
+    max-width: 100%;
+}
+
+.ads-full-width img{
+    max-width: 100%;
+}
+.sponsor-logo {
+    text-align: center;
+}
+.sponsor-logo a{
+    /*width: 180px;*/
+    width: 49%;
+    display: inline-block;
+    text-align: center;
+    margin: 10px 0;
+
+}
+
+.sponsor-logo img{
+    max-width: 100%;
+    max-height: 80px;
+    display: inline-block;
+}
+/* auto open sub menu */
+@media (min-width: 979px) {
+    ul.nav li.dropdown:hover > ul.dropdown-menu {
+        display: block;
+    }
+}
+
+.submitip {
+    font-weight: bold;
+    color: #00aa00;
+}
+
+.admin-info .submission{
+    border-bottom: solid #ccc 1px;
+}
+
+/*
+.navbar-default {
+    background-color: #2ecc71;
+    border-color: #27ae60;
+}
+.navbar-default .navbar-brand {
+    color: #ecf0f1;
+}
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+    color: #d1ffed;
+}
+.navbar-default .navbar-text {
+    color: #ecf0f1;
+}
+.navbar-default .navbar-nav > li > a {
+    color: #ecf0f1;
+}
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+    color: #d1ffed;
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+    color: #d1ffed;
+    background-color: #27ae60;
+}
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav > .open > a:focus {
+    color: #d1ffed;
+    background-color: #27ae60;
+}
+.navbar-default .navbar-toggle {
+    border-color: #27ae60;
+}
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus {
+    background-color: #27ae60;
+}
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: #ecf0f1;
+}
+.navbar-default .navbar-collapse,
+.navbar-default .navbar-form {
+    border-color: #ecf0f1;
+}
+.navbar-default .navbar-link {
+    color: #ecf0f1;
+}
+.navbar-default .navbar-link:hover {
+    color: #d1ffed;
+}
+
+@media (max-width: 767px) {
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a {
+        color: #ecf0f1;
+    }
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover,
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+        color: #d1ffed;
+    }
+    .navbar-default .navbar-nav .open .dropdown-menu > .active > a,
+    .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover,
+    .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
+        color: #d1ffed;
+        background-color: #27ae60;
+    }
+}*/
+
+
+.testcase-run {
+   /* border-top: solid #ccc 1px;*/
+    font-size: 12px;
+}
+.run-pre-label {
+    font-size: 11px;
+}
+.run-pre {
+    font-size: 11px;
+    padding: 3px;
+}
+
+#new-problems table {
+    font-size: 11px;
+}
+#profile-sidebar .panel-body {
+    font-size: 13px;
+}
+
+.contest-deactivated {
+    background-color: #fcf8e3 !important;
+    /*border: solid 2px red;*/
+}
+
+#chat-body-panel {
+    height: 225px;
+    overflow-y: scroll;
+    line-height: 1.3;
+    font-size: 13px;
+}
+
+.media {
+    margin-bottom: 3px;
+    margin-top: 3px;
+}
+
+.panel-chat, .panel-chat input {
+    font-size: 12px;
+}
+
+#user-online-count {
+    /*color: #4bec13;*/
+    font-weight: bold;
+}
+
+#emoji-btn {
+    text-indent: -9999px;
+    background-image: url('../vendor/emoji/img/icon.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 30px;
+}
+
+.tc-corrected {
+    color: #0a0;
+}
+.tc-count {
+   /* color: red;*/
+}
+
+.pertestcase-tccount {
+    color: gray;
+    font-size: 9px;
+}

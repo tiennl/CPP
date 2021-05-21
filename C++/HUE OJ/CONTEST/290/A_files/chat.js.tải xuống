@@ -1,0 +1,259 @@
+/**
+ * Created by lemycanh on 5/17/2017.
+ */
+(function(){
+    var cache = {};
+
+    this.tmpl = function tmpl(str, data){
+        // Figure out if we're getting a template, or if we need to
+        // load the template - and be sure to cache the result.
+        var fn = !/\W/.test(str) ?
+            cache[str] = cache[str] ||
+                tmpl(document.getElementById(str).innerHTML) :
+
+            // Generate a reusable function that will serve as a template
+            // generator (and which will be cached).
+            new Function("obj",
+                "var p=[],print=function(){p.push.apply(p,arguments);};" +
+
+                // Introduce the data as local variables using with(){}
+                "with(obj){p.push('" +
+
+                // Convert the template into pure JavaScript
+                str
+                    .replace(/[\r\t\n]/g, " ")
+                    .split("<%").join("\t")
+                    .replace(/((^|%>)[^\t]*)'/g, "$1\r")
+                    .replace(/\t=(.*?)%>/g, "',$1,'")
+                    .split("\t").join("');")
+                    .split("%>").join("p.push('")
+                    .split("\r").join("\\'")
+                + "');}return p.join('');");
+
+        // Provide some basic currying to the user
+        return data ? fn( data ) : fn;
+    };
+})();
+
+(function() {
+    var config = {
+        button: "#emoji-btn",
+        showTab: true,
+        animation: 'fade',
+        icons: [{
+            path: EMOJI_IMG + "/qq/",
+            name: "Hình động",
+            maxNum: 91,
+            file: ".gif",
+            placeholder: "#d{alias}#"
+        }, {
+            name: "Hình tĩnh",
+            path: EMOJI_IMG + "/tieba/",
+            maxNum: 50,
+            file: ".jpg",
+            placeholder: "#t{alias}#",
+
+        }, {
+            path: EMOJI_IMG + "/volam/",
+            name: "Võ lâm",
+            maxNum: 31,
+            file: ".gif",
+            placeholder: "{alias}",
+            alias: {
+            1: ":D",
+                2: ":)",
+                3: ";)",
+                4: ":(",
+                5: ";;)",
+                6: ">:D<",
+                7: ":-/",
+                8: ":x",
+                9: ":'>",
+                10: ":P",
+                11: ":-*",
+                12: "=((",
+                13: ":-o",
+                14: "x-(",
+                15: ":>",
+                16: ":T",
+                17: ":-s",
+                18: "#:-s",
+                19: ">:)",
+                20: ":((",
+                21: ":))",
+                22: ":|",
+                23: "/:)",
+                24: "=))",
+                25: "o:-)",
+                26: ":-B",
+                27: "=;",
+                28: ":-)",
+                29: "8-|",
+                30: "L-)",
+                31: ":v"
+            }
+        }]
+    };
+    $(window).on('load', function() {
+        $("#chat-msg").emoji(config);
+    });
+
+    window.chatInitParseEmoji = function() {
+        $("#chat-msg-list").emojiParse(config);
+    };
+    window.parseChatLine = function(line) {
+        $(line).emojiParse(config);
+    }
+})();
+
+function htmlEscape(str) {
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
+
+function htmlUnescape(str){
+    return str
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&amp;/g, '&');
+}
+
+$(function() {
+
+    var host = location.hostname;
+    var socket = io.connect('http://'+ host + ':8080/chat');
+
+    socket.on('connect', function(){
+        if(!window.TOKEN && USER_NAME) {
+            $.ajax({
+                url: APP_URL + "/token"
+            }).done(function(result) {
+                window.TOKEN = result.token;
+                socket.emit("authenticate", JSON.stringify({token: window.TOKEN}));
+            }).fail(function () {
+                console.log("403");
+            });
+        } else if(window.TOKEN) {
+            socket.emit("authenticate", JSON.stringify({token: window.TOKEN}));
+        }
+
+        $("#chat-connection-status").html("&nbsp;online").removeClass("connection-offline").addClass("connection-online");
+    });
+
+    socket.on('onlinecount', function(count) {
+        $('#user-online-count').text(count);
+    });
+
+    socket.on('disconnect', function() {
+        $("#chat-connection-status").html("&nbsp;offline").removeClass("connection-online").addClass("connection-offline");
+    });
+
+    socket.on('chatinit', function (data) {
+        jQuery.fn.urlize = function() {
+            if (this.length > 0) {
+                this.each(function(i, obj){
+                    // making links active
+                    var x = $(obj).html();
+                    var list = x.match( /\b(https:\/\/|https:\/\/www\.|http:\/\/|www\.|http:\/\/www\.)[^ <]{2,200}\b/g );
+                    if (list) {
+                        for ( i = 0; i < list.length; i++ ) {
+                            var prot = list[i].indexOf('http://') === 0 || list[i].indexOf('https://') === 0 ? '' : 'http://';
+                            x = x.replace( list[i], "<a target='_blank' href='" + prot + list[i] + "'>"+ list[i] + "</a>" );
+                        }
+                    }
+                    $(obj).html(x);
+                });
+            }
+        };
+
+        data = JSON.parse(data);
+        $('#chat-msg-list').empty();
+        for (var i= data.length - 1; i >= 0; i--){
+            var d = JSON.parse(data[i]);
+            d.message = htmlEscape(d.message);
+            //d.time = moment(d.time).locale("vi")/*.tz("Asia/Ho_Chi_Minh")*/.fromNow();
+            var item = $(tmpl('msg_item_tmpl', d));
+            $('#chat-msg-list').append(item);
+            $(item).urlize();
+            parseChatLine(item);
+        }
+        update_fromnow();
+        setInterval(update_fromnow, 15*1000);
+
+        //scroll to bottom
+        var d = $('#chat-body-panel');
+        d.scrollTop(d.prop("scrollHeight"));
+    });
+
+    socket.on('chat', function(data) {
+        jQuery.fn.urlize = function() {
+            if (this.length > 0) {
+                this.each(function(i, obj){
+                    // making links active
+                    var x = $(obj).html();
+                    var list = x.match( /\b(http:\/\/|www\.|http:\/\/www\.)[^ <]{2,200}\b/g );
+                    if (list) {
+                        for ( i = 0; i < list.length; i++ ) {
+                            var prot = list[i].indexOf('http://') === 0 || list[i].indexOf('https://') === 0 ? '' : 'http://';
+                            x = x.replace( list[i], "<a target='_blank' href='" + prot + list[i] + "'>"+ list[i] + "</a>" );
+                        }
+
+                    }
+                    $(obj).html(x);
+                });
+            }
+        };
+
+        data = JSON.parse(data);
+        data.message = htmlEscape(data.message);
+        //data.time =  moment(data.time).locale("vi").fromNow();
+        var item = $(tmpl('msg_item_tmpl', data));
+        $('#chat-msg-list').append(item);
+        $(item).urlize();
+        parseChatLine(item);
+        update_fromnow();
+        if(data.author != USER_NAME)
+            $('#message-sound')[0].play();
+        //scroll to bottom
+        var d = $('#chat-body-panel');
+        d.animate({scrollTop: d.prop("scrollHeight")}, 1000);
+    });
+
+
+
+    /**
+     * ========================================================
+     */
+    function update_fromnow() {
+        $(".chat-fromnow").each(function(index, element){
+            var timestr = $(this).attr("time");
+            var fromnowstr = moment(timestr).locale("vi").fromNow(true);
+            $(this).text(fromnowstr);
+        });
+    }
+
+    function send_message() {
+        var message = ($('#chat-msg').val());
+        $('#chat-msg').val('');
+        socket.emit('chat', message);
+    }
+
+    $('#send-chat').click(function() {
+        send_message();
+    });
+
+    $('#chat-msg').keyup(function(e){
+        if(e.keyCode == 13) {
+            send_message();
+        }
+    });
+});
+
+
+
